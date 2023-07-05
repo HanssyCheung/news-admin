@@ -1,30 +1,22 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
   <router-view/>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+*{
+  // 设置全局样式(没有设置scpoed)
+  margin: 0;
+  padding: 0;
 }
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+  position:absolute
+}
+::-webkit-scrollbar-thumb{
+  background-color: beige;
+}
+::-webkit-scrollbar-track{
+  background-color: azure;
 }
 </style>
