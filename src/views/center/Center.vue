@@ -17,7 +17,7 @@
                         </div>
                     </template>
                     <el-form ref="userFormRef" :model="userForm" :rules="userRules" label-width="120px"
-                        class="demo-ruleForm" :size="formSize" status-icon>
+                        class="demo-ruleForm"  status-icon>
                         <el-form-item label="用户名" prop="username">
                             <el-input v-model="userForm.username" />
                         </el-form-item>
@@ -33,8 +33,8 @@
                         <el-form-item label="头像" prop="avatar">
                             <el-upload class="avatar-uploader"
                                 action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                                :show-file-list="false" :on-success="handleAvatarSuccess"
-                                :before-upload="beforeAvatarUpload" :auto-upload="false" :on-change="handleChange">
+                                :show-file-list="false"
+                                :auto-upload="false" :on-change="handleChange">
                                 <img v-if="userForm.avatar" :src="userForm.avatar" class="avatar" />
                                 <el-icon v-else class="avatar-uploader-icon">
                                     <Plus />
@@ -43,7 +43,7 @@
                         </el-form-item>
 
                         <el-form-item>
-                            <el-button type="primary" @click="submitForm(loginFormRef)">登录</el-button>
+                            <el-button type="primary" @click="submitForm()">更新</el-button>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -56,6 +56,7 @@
 import { computed, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { Plus } from '@element-plus/icons-vue'
+import axios from 'axios';
 
 const store = useStore()
 const avatarUrl = computed(() => store.state.userInfo.avatarUrl ?
@@ -68,7 +69,8 @@ const userForm = reactive({
     username,
     gender,
     introduction,
-    avatar
+    avatar,
+    file: null
 })
 
 const userRules = reactive({
@@ -103,10 +105,27 @@ const handleChange = (file) => {
     console.log("file", file)
 
     userForm.avatar = URL.createObjectURL(file.raw)
+    userForm.file = file.raw
 }
 
 const submitForm = ()=>{
-    
+    userFormRef.value.validate((valid)=>{
+        if(valid){
+            console.log("submit",userForm)
+            const parmas = new FormData()
+            for(let i in userForm){
+                parmas.append(i,userForm[i])
+            }
+            console.log("parmas",parmas)
+            axios.post("/adminapi/user/upload",parmas,{
+                header:{
+                    "Content Type": "multipart/form-data"
+                }
+            }).then(res=>{
+                console.log(res.data)
+            })
+        }
+    })
 }
 </script>
 
